@@ -58,4 +58,4 @@ gcloud dataproc batches submit spark \
 ## 참조 (Citations)
 [AnolLM](https://github.com/amazon-science/AnoLLM-large-language-models-for-tabular-anomaly-detection)\
 [Google Cloud Dataproc Serverless](https://cloud.google.com/dataproc-serverless/docs/overview?hl=ko)\
-[Vertex AI Vector Search](https://cloud.google.com/vertex-ai/docs/vector-search/overview?hl=ko)\
+[Vertex AI Vector Search](https://cloud.google.com/vertex-ai/docs/vector-search/overview?hl=ko)
