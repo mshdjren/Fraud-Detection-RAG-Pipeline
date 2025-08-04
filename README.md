@@ -1,6 +1,6 @@
 # GCP-multi-cluster-memory-bank
 
-## Overview
+## 프로젝트 개요 (Project Overview)
 이 프로젝트는 Vertex AI Vector Search (KNN), PySpark, AnolLM을 활용하여 대규모 데이터 환경에서 이상(Anomaly)을 효과적으로 탐지하는 확장성 높은 백엔드 시스템을 구축하는 것을 목표로 합니다.
 
 특히, 금융 거래 데이터와 같은 대규모 정형 데이터에 대해 최신 임베딩 기술(AnolLM)을 적용하고, 이를 Google Cloud의 완전 관리형 서비스들과 연동하여 모델 개발부터 대규모 데이터 추론 및 모니터링까지 전 과정을 자동화하는 MLOps 파이프라인을 구현합니다.
