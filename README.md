@@ -56,6 +56,6 @@ gcloud dataproc batches submit spark \
 - 핵심 코드: main.py 파일에서 대규모 분산 환경에서 AnolLM 모델을 활용한 임베딩 추론 로직을 확인할 수 있습니다.
 
 ## 참조 (Citations)
-[AnolLM](https://github.com/amazon-science/AnoLLM-large-language-models-for-tabular-anomaly-detection)
-[Google Cloud Dataproc Serverless](https://cloud.google.com/dataproc-serverless/docs/overview?hl=ko) 
-[Vertex AI Vector Search](https://cloud.google.com/vertex-ai/docs/vector-search/overview?hl=ko)
+[AnolLM](https://github.com/amazon-science/AnoLLM-large-language-models-for-tabular-anomaly-detection)\
+[Google Cloud Dataproc Serverless](https://cloud.google.com/dataproc-serverless/docs/overview?hl=ko)\
+[Vertex AI Vector Search](https://cloud.google.com/vertex-ai/docs/vector-search/overview?hl=ko)\
