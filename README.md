@@ -258,6 +258,8 @@ curl -X POST http://localhost:8000/analyze \
 ---
 
 ## 📁 프로젝트 구조 (Directory Structure)
+
+```text
 fraudecom_v3/
 ├── apps/
 │   ├── router/              # Percolate Query 기반 클러스터 라우팅
@@ -277,8 +279,9 @@ fraudecom_v3/
 │   ├── ingest_tree_pipeline.py  # Decision Tree → Percolate 변환
 │   └── hard_negative_miner.py   # Hard Negative Mining
 └── README.md
-
+```
 ---
+
 
 ## 🔧 개발 환경 설정 (Development)
 
@@ -311,22 +314,11 @@ pytest tests/
 - [Coreset Sampling for Active Learning](https://arxiv.org/abs/1708.00489)
 - [GRPO: Group Relative Policy Optimization](https://arxiv.org/abs/2402.xxxxx)
 
-**당근 테크 블로그**
-- [연간 LLM 호출 비용 25% 절감, 시맨틱 캐싱 도입 기록](https://medium.com/daangn/semantic-caching-llm-cost-reduction)
-
 ---
 
 ## 📝 License
 
 이 프로젝트는 개인 포트폴리오 목적으로 제작되었습니다.
-
----
-
-## 👤 Contact
-
-- **GitHub**: [@your-username](https://github.com/your-username)
-- **Email**: moonsh1031@gmail.com
-- **LinkedIn**: [문상혁](https://linkedin.com/in/your-profile)
 
 ---
 
