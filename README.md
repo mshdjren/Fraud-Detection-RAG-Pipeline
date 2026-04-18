@@ -89,6 +89,33 @@ AUROC_drop = 0.4%p  # 0.912 → 0.908 (거의 유지)
 Memory_reduction = 89%  # 2.8GB → 0.31GB
 Latency_improvement = 46%  # 125ms → 68ms (median)
 ```
+Filter KNN 단계에서의 예측 성능 결과입니다. (Total Samples: 2,830)
+
+#### **Classification Report**
+
+| Metric | Normal | Abnormal | Macro Avg | Weighted Avg |
+| :--- | :---: | :---: | :---: | :---: |
+| **Precision** | 0.86 | 0.81 | 0.83 | 0.83 |
+| **Recall** | 0.80 | 0.87 | 0.83 | 0.83 |
+| **F1-Score** | 0.83 | 0.84 | 0.83 | 0.83 |
+| **Support** | 1,415 | 1,415 | 2,830 | 2,830 |
+
+<br>
+
+#### **Confusion Matrix**
+
+| | Predicted Normal | Predicted Abnormal |
+| :--- | :---: | :---: |
+| **Actual Normal** | **1,128** (TN) | 287 (FP) |
+| **Actual Abnormal** | 185 (FN) | **1,230** (TP) |
+
+<br>
+
+#### **Performance Summary**
+
+* **Overall Accuracy**: 83.32%
+* **Total Correct**: 2,358 / 2,830
+* **Analysis**: Abnormal(Fraud)에 대한 Recall(0.87)이 상대적으로 높아, 실제 이상 상황을 놓치지 않는 성능이 준수하게 확보됨을 확인하였습니다.
 
 ---
 
