@@ -68,6 +68,18 @@ Test Transaction
 ```
 **효과**: 검색 공간을 클러스터 단위로 필터링 → Router Recall@5 0.816 → 0.905 (11% ↑)
 
+### 📊 실험 결과 (Results) - 금융 대규모 데이터셋
+
+Two-Stage Retrieval 성능 측정 결과입니다. 각 검색 유형(Knn search type)에 따른 클러스터 정확도, 리콜, 지연 시간 및 AUROC 지표를 비교합니다.
+
+| Knn search type | Cluster acc / Recall @5 | Router MRR | Latency p99 (ms) | AUROC (Total) |
+| :--- | :---: | :---: | :---: | :---: |
+| **Strict AND (v1)** | 0.816 / 0.816 | 1.00 | 1637.78 | 0.786 / 0.8726 |
+| **V1 + aug** | 0.816 / 0.905 | 0.941 | 1720.04 | 0.956 / 0.9125 |
+| **V1 + aug + bucket** | 0.409 / 0.818 | 0.4998 | 1993.10 | 0.956 / 0.9037 |
+
+> **Note:** `v2`, `v3` 실험 데이터는 현재 업데이트 중이며, `Routing EPS-Recall` 항목은 측정 중입니다.
+
 **Stage 2: Filtered KNN (Coreset Sampling)**
 ```python
 # 매칭된 클러스터 내에서만 KNN 검색
