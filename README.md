@@ -102,15 +102,6 @@ Filter KNN 단계에서의 예측 성능 결과입니다. (Total Samples: 2,830)
 
 <br>
 
-#### **Confusion Matrix**
-
-| | Predicted Normal | Predicted Abnormal |
-| :--- | :---: | :---: |
-| **Actual Normal** | **1,128** (TN) | 287 (FP) |
-| **Actual Abnormal** | 185 (FN) | **1,230** (TP) |
-
-<br>
-
 #### **Performance Summary**
 
 * **Overall Accuracy**: 83.32%
