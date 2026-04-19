@@ -46,7 +46,7 @@ Test Transaction
 
 ---
 
-## 🔬 핵심 기술 (Core Technologies)
+<!-- ## 🔬 핵심 기술 (Core Technologies)
 
 ### 1️⃣ Two-Stage Retrieval
 
@@ -64,7 +64,105 @@ Test Transaction
       ]
     }
   }
+} -->
+
+## 🔬 핵심 기술 (Core Technologies)
+
+### 1️⃣ Evolutionary Cluster Routing (Percolate Query)
+
+본 프로젝트는 대규모 Fraud 탐지에서 정확도와 속도를 동시에 확보하기 위해 라우팅 쿼리를 **3단계에 걸쳐 진화**시켰습니다.
+
+---
+
+#### **Phase 1: Strict AND (Initial Baseline)**
+
+Decision Tree의 리프 노드 경로를 `bool.filter`로 직접 변환하여 정밀 매칭합니다.
+
+```python
+# 예시: feature v1 ∈ [0.8, ∞) AND v3 ∈ [-1.2, ∞) → Cluster 63
+{
+  "query": {
+    "bool": {
+      "filter": [
+        {"range": {"v1": {"gte": 0.8}}},
+        {"range": {"v3": {"gte": -1.2}}}
+      ]
+    }
+  }
 }
+```
+
+- **효과**: 클러스터 단위 정밀 필터링
+- **한계**: 경계값 오차 발생 시 Recall 하락
+
+---
+
+#### **Phase 2: Hybrid Diversity (Rule Top-1 + Vector Top-4)**
+
+규칙 기반 매칭(Top-1)과 벡터 거리 보완(Top-4)을 결합합니다.
+
+```python
+# 1. Phase 1으로 Top-1 클러스터 확보
+# 2. 벡터 거리(L2)로 Top-4 보완
+candidates = [top_1_rule_match] + sorted(centroids, key=lambda x: l2(vec, x))[:4]
+```
+
+- **효과**: Recall@5 상향 (0.816 → 0.905)
+- **장점**: 규칙 미매칭 시에도 벡터 유사도로 탐지 연속성 보장
+
+---
+
+#### **Phase 3: Optimized Bucketization (Current)**
+
+Range 연산을 **Term Matching**으로 전환하여 Pruning 성능 극대화.
+
+```python
+# 수치를 버킷으로 치환 + ±1 Tolerance로 경계값 오차 흡수
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "bool": {
+            "should": [
+              {"term": {"v1_direction": "lte"}},
+              {"terms": {"v1_bucket": [6, 7, 8]}}  # ±1 Tolerance
+            ],
+            "minimum_should_match": 1,
+            "boost": 2.0
+          }
+        },
+        {
+          "percolate": {
+            "field": "query",
+            "document": {"v1": 0.05, "v3": -1.1}
+          }
+        }
+      ]
+    }
+  }
+}
+```
+
+**최종 성과**:
+- **Pruning**: 후보군 97% 제거 (5,760개 → ~150개)
+- **Performance**: 부동소수점 비교 → Bitset 연산으로 전환
+- **Architecture**: Index `_meta`에 `split_points` 내장하여 Self-contained 구조
+
+---
+
+### 2️⃣ Two-Stage Retrieval Strategy
+
+| Stage | Process | Technology |
+|:---:|:---|:---|
+| **Stage 1** | Cluster Routing | Percolate Query + Bucketization (Phase 3) |
+| **Stage 2** | Rule Validation | Exact Range Matching (Post-Filtering) |
+
+**핵심 개선**:
+- 산술 연산 → 주소 매핑으로 전환하여 레이턴시 p99 안정화
+- ±1 Tolerance로 Decision Tree의 단단한 경계를 확률적으로 보완
+
+---
 ```
 **효과**: 검색 공간을 클러스터 단위로 필터링 → Router Recall@5 0.816 → 0.905 (11% ↑)
 
