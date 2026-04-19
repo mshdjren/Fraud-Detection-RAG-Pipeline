@@ -42,6 +42,7 @@ Test Transaction
 [Analyzer] Distance Scoring + LLM Reasoning → 이상 판단 + 원인 설명
       ↓
 [Orchestrator] Final Output → API Response
+```
 
 ---
 
@@ -343,9 +344,9 @@ curl -X POST http://localhost:8000/analyze \
     "sex": "M",
     "age": 25
   }'
-``` -->
+```
 
-<!-- ## 🔧 개발 환경 설정 (Development)
+## 🔧 개발 환경 설정 (Development)
 
 ```bash
 # 1. 가상환경 생성
@@ -362,10 +363,7 @@ cp .env.example .env
 # 4. 로컬 테스트
 pytest tests/
 ```
-
 --- -->
-
----
 
 ## 📁 프로젝트 구조 (Directory Structure)
 
