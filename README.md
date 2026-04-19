@@ -29,7 +29,7 @@ Elasticsearch 기반 Two-Stage Retrieval과 경량 LLM Analyzer를 결합하여 
 
 ## 🏗️ 시스템 아키텍처 (Architecture)
 
-**[아키텍처 다이어그램 삽입 예정]**  
+![Fraud Detection System Architecture Diagram](./picture/pipeline.jpg)
 *GKE 기반 4단계 MSA 구조: Router → Retriever → Analyzer → Orchestrator*
 
 ### 파이프라인 흐름
