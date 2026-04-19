@@ -82,6 +82,45 @@ Two-Stage Retrieval 성능 측정 결과입니다. 각 검색 유형(Knn search 
 
 **Stage 2: Filtered KNN (Coreset Sampling)**
 ```python
+# 매정된 클러스터 내에서만 KNN 검색
+# Coreset: 대표 샘플 10%만 인덱싱 (Greedy Farthest Point Sampling)
+AUROC_drop = 0.4%p  # 0.912 → 0.908 (거의 유지)
+Memory_reduction = 89%  # 2.8GB → 0.31GB
+Latency_improvement = 46%  # 125ms → 68ms (median)
+```
+
+Filter KNN 단계에서의 예측 성능 결과입니다. (Total Samples: 2,830)
+
+<table>
+<tr>
+<td valign="top">
+
+#### **Classification Report**
+| Metric | Normal | Abnormal | Macro Avg | Weighted Avg |
+| :--- | :---: | :---: | :---: | :---: |
+| **Precision** | 0.86 | 0.81 | 0.83 | 0.83 |
+| **Recall** | 0.80 | 0.87 | 0.83 | 0.83 |
+| **F1-Score** | 0.83 | 0.84 | 0.83 | 0.83 |
+| **Support** | 1,415 | 1,415 | 2,830 | 2,830 |
+
+</td>
+<td>
+
+![Page Fault Analysis](picture/page_fault.jpg)
+
+</td>
+</tr>
+</table>
+
+<br>
+
+#### **Performance Summary**
+* **Overall Accuracy**: 83.32%
+* **Total Correct**: 2,358 / 2,830
+* **Analysis**: Abnormal(Fraud)에 대한 Recall(0.87)이 상대적으로 높아, 실제 이상 상황을 놓치지 않는 성능이 준수하게 확보됨을 확인하였습니다.
+
+<!-- **Stage 2: Filtered KNN (Coreset Sampling)**
+```python
 # 매칭된 클러스터 내에서만 KNN 검색
 # Coreset: 대표 샘플 10%만 인덱싱 (Greedy Farthest Point Sampling)
 
@@ -106,7 +145,7 @@ Filter KNN 단계에서의 예측 성능 결과입니다. (Total Samples: 2,830)
 
 * **Overall Accuracy**: 83.32%
 * **Total Correct**: 2,358 / 2,830
-* **Analysis**: Abnormal(Fraud)에 대한 Recall(0.87)이 상대적으로 높아, 실제 이상 상황을 놓치지 않는 성능이 준수하게 확보됨을 확인하였습니다.
+* **Analysis**: Abnormal(Fraud)에 대한 Recall(0.87)이 상대적으로 높아, 실제 이상 상황을 놓치지 않는 성능이 준수하게 확보됨을 확인하였습니다. -->
 
 ---
 
