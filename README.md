@@ -128,7 +128,7 @@ V1 및 V2의 Range 연산을 **Term Matching**으로 전환하여 Pruning 성능
 
 ---
 
-### 📊 실험 결과 (Results)
+## 📊 실험 결과 (Percoalte query routing)
 
 Percolate query version에 따른 클러스터 정확도, 리콜, 지연 시간 및 AUROC 지표를 비교합니다.
 
@@ -143,7 +143,7 @@ Percolate query version에 따른 클러스터 정확도, 리콜, 지연 시간 
 ### 2️⃣ Filtered KNN (Coreset Sampling 검증)
 Coreset Sampling 최적 운영점 검증: 메모리-이상탐지 성능-검색 latency trade-off 분석을 통해, coreset sampling 비율 10%의 최적점을 도출하고자 하였습니다.
 
-### 검증 결과 (Results)
+## 📊 실험 결과 (Coreset Sampling 검증)
 <table>
 <tr>
 <td width="60%" valign="top">
@@ -171,7 +171,7 @@ Coreset Sampling 최적 운영점 검증: 메모리-이상탐지 성능-검색 l
 * **Analysis**: Abnormal(Fraud)에 대한 Recall(0.87)이 상대적으로 높아, 실제 이상 상황을 놓치지 않는 성능이 준수하게 확보됨을 확인하였습니다.
 ---
 
-### 3️⃣ LLM Analyzer 경량화
+### 3️⃣ Pipeline-aware data mining & LLM Analyzer 경량화 및 GRPO 최적화
 Coreset Sampling 최적 운영점 검증: 메모리-이상탐지 성능-검색 latency trade-off 분석을 통해, coreset sampling 비율 10%의 최적점을 도출하고자 하였습니다.
 
 **Pipeline-Aware Hard Negative Mining (3가지 유형)**
@@ -199,7 +199,7 @@ Advantage = (reward - group_mean) / group_std  # 같은 hard negative type 내
 Policy_loss = -advantage × log_prob + KL_penalty
 ```
 
-### 📊 LLM Analyzer 실험 및 성능 지표
+## 📊 실험 결과 (Data mining 및 LLM Analyzer 최적화)
 
 <table>
   <tr>
