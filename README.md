@@ -147,6 +147,66 @@ Advantage = (reward - group_mean) / group_std  # 같은 hard negative type 내
 Policy_loss = -advantage × log_prob + KL_penalty
 ```
 
+### 📊 LLM Analyzer 실험 및 성능 지표
+
+<table>
+  <tr>
+    <td width="50%" rowspan="2" valign="top">
+      <p align="center"><b>LLM Analyzer Interface (Streamlit)</b></p>
+      <img src="./picture/llm_streamlit.jpg" alt="Streamlit Screenshot" width="100%">
+    </td>
+    <td width="50%" valign="top">
+      <p align="center"><b>Negative Mining Sampling Efficiency</b></p>
+      <img src="./picture/mining_data.jpg" alt="Mining Data Graph" width="100%">
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+      <p align="center"><b>Performance Metrics Comparison</b></p>
+      <table width="100%">
+        <thead>
+          <tr>
+            <th>Data Type</th>
+            <th>Training</th>
+            <th>AUROC</th>
+            <th>ECE</th>
+            <th>Judge</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>Distance-based</b></td>
+            <td>SFT</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td><b>Mining-based</b></td>
+            <td>SFT</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td><b>Distance-based</b></td>
+            <td>GRPO</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td><b>Mining-based</b></td>
+            <td>GRPO</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+          </tr>
+        </tbody>
+      </table>
+    </td>
+  </tr>
+</table>
 ---
 
 ## 💻 기술 스택 (Technology Stack)
