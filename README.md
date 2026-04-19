@@ -391,7 +391,7 @@ fraudecom_v3/
 ## 📚 참조 (References)
 
 **학술 논문**
-- [WaferDC)](https://github.com/SpatialAILab/WaferDC)
+- [WaferDC: Multi-cluster Memory Bank](https://github.com/SpatialAILab/WaferDC)
 - [AnoLLM: Large Language Models for Tabular Anomaly Detection](https://github.com/amazon-science/AnoLLM-large-language-models-for-tabular-anomaly-detection)
 - [GRPO: Group Relative Policy Optimization](https://arxiv.org/pdf/2402.03300)
 
