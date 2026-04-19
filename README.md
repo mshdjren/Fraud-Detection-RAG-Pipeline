@@ -163,8 +163,6 @@ Range 연산을 **Term Matching**으로 전환하여 Pruning 성능 극대화.
 - ±1 Tolerance로 Decision Tree의 단단한 경계를 확률적으로 보완
 
 ---
-```
-**효과**: 검색 공간을 클러스터 단위로 필터링 → Router Recall@5 0.816 → 0.905 (11% ↑)
 
 ### 📊 실험 결과 (Results) - 금융 대규모 데이터셋
 
