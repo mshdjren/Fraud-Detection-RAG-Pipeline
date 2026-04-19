@@ -93,7 +93,7 @@ Filter KNN 단계에서의 예측 성능 결과입니다. (Total Samples: 2,830)
 
 <table>
 <tr>
-<td valign="top">
+<td width="60%" valign="top">
 
 #### **Classification Report**
 | Metric | Normal | Abnormal | Macro Avg | Weighted Avg |
@@ -104,9 +104,9 @@ Filter KNN 단계에서의 예측 성능 결과입니다. (Total Samples: 2,830)
 | **Support** | 1,415 | 1,415 | 2,830 | 2,830 |
 
 </td>
-<td>
+<td width="40%">
 
-![Page Fault Analysis](picture/page_fault.jpg)
+<img src="picture/page_fault.jpg" width="100%">
 
 </td>
 </tr>
