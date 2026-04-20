@@ -16,7 +16,7 @@ Elasticsearch 기반 Two-Stage Retrieval과 경량 LLM Analyzer를 결합하여,
 
 ## 🎯 To be Updated..
 
-- [ ] 코드 정리
+- [ ] 코드 정리 (llm analyzer training colab, gke elasticsearch node, 전체적인 주석 및 불필요한 코드 정리)
 - [ ] 전체 파이프라인 설명 picture update 예정
 - [ ] Locust 부하테스트 report 이미지 update 예정
 - [ ] Data mining 관련 통계 update 예정
@@ -142,11 +142,11 @@ V1 및 V2의 Range 연산을 **Term Matching**으로 전환하여 Pruning 성능
 
 Percolate query version에 따른 클러스터 정확도, 리콜, 단건 검색 지연 시간 및 AUROC 지표를 비교합니다.
 
-| Percolate query version | Cluster acc / Recall @5 (Router) | Router MRR | Latency p99 (ms) |  Recall @5 (knn) / AUROC |
+| query version | Cluster acc / Recall@5 (Router) | Router MRR | Latency p99 (ms) |  Recall@5 (knn) / AUROC |
 | :--- | :---: | :---: | :---: | :---: |
 | **Strict AND (v1)** | 0.816 / 0.816 | 0.941 | 420.25 | 0.786 / 0.8726 |
-| **V1 + aug** | 0.823 / 0.905 | 1.00 | 430.01 | 0.956 / 0.9125 |
-| **V1 + aug + bucket** | 0.823 / 1.00 | 0.4998 | 409.25 | 0.956 / 0.9037 |
+| **V1 + aug** | **0.823 / 0.905** | **1.00** | 430.01 | **0.956 / 0.9125** |
+| **V1 + aug + bucket** | 0.823 / 0.897 | 0.988 | **409.25** | 0.956 / 0.9037 |
 
 ---
 
@@ -176,11 +176,11 @@ Coreset Sampling 최적 운영점 검증: 메모리-이상탐지 성능-검색 l
 
 **Croreset Sampling 비율 vs AUROC vs 검색 지연**
 
-| Coreset % | Index Size (GB) | Docs Count | AUROC | Recall@5 | Median Latency (ms) |
+| Coreset % | Index Size (GB) | Docs Count | AUROC | Recall@5 (knn) | Median Latency (ms) |
 | :---: | :---: | :---: | :---: | :---: | :---: |
-| 100 | 2.8 | 100,000 | 0.908 | 0.89 | 125 |
-| 10 | 0.31 | 10,000 | 0.912 | 0.87 | 68 |
-| 1 | 0.035 | 1,000 | 0.885 | 0.78 | 52 |
+| 100 | 2.8 | 140,128 | 0.956 | **0.956** | 125 |
+| **10** | 0.31 | 14,012 | **0.952** | 0.947 | 68 |
+| 1 | 0.035 | 1,401 | 0.901 | 0.882 | **52** |
 
 <table>
 <tr>
@@ -209,7 +209,7 @@ Coreset Sampling 최적 운영점 검증: 메모리-이상탐지 성능-검색 l
 ---
 
 ### 3️⃣ Pipeline-aware data mining & LLM Analyzer 경량화 및 GRPO 최적화
-Coreset Sampling 최적 운영점 검증: 메모리-이상탐지 성능-검색 latency trade-off 분석을 통해, coreset sampling 비율 10%의 최적점을 도출하고자 하였습니다.
+Router 오류(type1), Cross-cluster 오류(type2), Distance boundary(type3) 3가지 타입 구조화된 실패 케이스 mining 및 6-axis reward function을 통해, LLM Analyzer의 AUROC +2.3%p 향상 및 confidence calibration(ECE 0.15→0.08) 개선을 도출하고자 하였습니다.
 
 **Pipeline-Aware Hard Negative Mining (3가지 유형)**
 ```python
@@ -246,12 +246,15 @@ Policy_loss = -advantage × log_prob + KL_penalty
 
 **Data mining 및 GRPO 적용 유무에 따른 LLM Analyzer 이상 판단 성능**
 
-| Data Type | Training | AUROC | ECE | Judge |
+| Data Type | Training | AUROC | ECE ↓ | Judge ↑ |
 |:---|:---:|:---:|:---:|:---:|
-| **Distance-based** | SFT | - | - | - |
-| **Mining-based** | SFT | - | - | - |
-| **Distance-based** | GRPO | - | - | - |
-| **Mining-based** | GRPO | - | - | - |
+| **Distance-based** | SFT | 0.820 | 0.15 | 6.5/10 |
+| **Mining-based** | SFT | 0.850 | 0.12 | 7.0/10 |
+| **Distance-based** | GRPO | 0.840 | 0.08 | 7.2/10 |
+| **Mining-based** | GRPO | **0.873** | **0.08** | **7.5/10** |
+
+- **ECE (Expected Calibration Error)**: Confidence calibration 지표, 낮을수록 우수 (Teacher prompt 개선 + GRPO calibration reward)
+- **Judge**: HuggingFace-based reasoning quality 평가 (Relevance, Consistency, Specificity), 10점 만점
 
 
 ## 💻 기술 스택 (Technology Stack)
