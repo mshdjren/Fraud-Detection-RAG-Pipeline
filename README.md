@@ -37,7 +37,7 @@ Elasticsearch 기반 Two-Stage Retrieval과 경량 LLM Analyzer를 결합하여,
 
 ## 🏗️ 시스템 아키텍처 (Architecture)
 
-![Fraud Detection System Architecture Diagram](./picture/pipeline.jpg) -->
+<!-- ![Fraud Detection System Architecture Diagram](./picture/pipeline.jpg) --> -->
 
 ### 파이프라인 흐름
 
@@ -141,7 +141,7 @@ V1 및 V2의 Range 연산을 **Term Matching**으로 전환하여 Pruning 성능
 
 Percolate query version에 따른 클러스터 정확도, 리콜, 단건 검색 지연 시간 및 AUROC 지표를 비교합니다.
 
-| Percolate query version | Cluster acc / Router Recall @5 | Router MRR | Latency p99 (ms) | knn Recall @5 AUROC |
+| Percolate query version | Cluster acc / Recall @5 (Router) | Router MRR | Latency p99 (ms) |  Recall @5 (knn) / AUROC |
 | :--- | :---: | :---: | :---: | :---: |
 | **Strict AND (v1)** | 0.816 / 0.816 | 0.941 | 420.25 | 0.786 / 0.8726 |
 | **V1 + aug** | 0.823 / 0.905 | 1.00 | 430.01 | 0.956 / 0.9125 |
@@ -158,46 +158,42 @@ Coreset Sampling 최적 운영점 검증: 메모리-이상탐지 성능-검색 l
 
 <img src="picture/coreset_explain.jpg" width="100%">
 
-**Coreset Sampling Algorithm (from https://kmhana.tistory.com/6)**
+**Coreset Sampling Algorithm**<br>[(from https://kmhana.tistory.com/6)](https://kmhana.tistory.com/6)
 
 </td>
 <td width="50%" align="center">
 
 <img src="picture/coreset_tsne.jpg" width="100%">
 
-**Cluster Distribution with coreset sampling ratio(t-SNE)**
+**Cluster Distribution with coreset sampling ratio**<br>(t-SNE)
 
 </td>
 </tr>
 </table>
 
-<img src="picture/coreset_tradeoff.jpg" width="100%">
-<img src="picture/coreset_tradeoff.jpg" width="100%">
-
-
 #### 📊 실험 결과 (Coreset Sampling 검증)
 
-**AUROC vs. Sampling 비율:**
+**Croreset Sampling 비율 vs AUROC vs 검색 지연**
 
 | Coreset % | Index Size (GB) | Docs Count | AUROC | Recall@5 | Median Latency (ms) |
 | :---: | :---: | :---: | :---: | :---: | :---: |
-| 100 | 2.8 | 100,000 | 0.912 | 0.89 | 125 |
-| 10 | 0.31 | 10,000 | 0.908 | 0.87 | 68 |
+| 100 | 2.8 | 100,000 | 0.908 | 0.89 | 125 |
+| 10 | 0.31 | 10,000 | 0.912 | 0.87 | 68 |
 | 1 | 0.035 | 1,000 | 0.885 | 0.78 | 52 |
 
 <table>
 <tr>
 <td width="50%" valign="top">
 
-**Node Pinning 효과:**
+**Coreset Sampling 유무에 따른 Page Faults 발생 정도 (Memory 2GB로 Node 제한시)**
 
-| Node Pinning | 100% Index Page Faults/sec | 10% Index Page Faults/sec |
+| Index sharding | 100% Index Page Faults/sec | 10% Index Page Faults/sec |
 | :--- | :---: | :---: |
 | 미적용 | 45.2 (cache pollution) | 38.7 (cache pollution) |
 | 적용 | 52.3 (isolated) | 8.1 (isolated) |
 
 </td>
-<td width="50%">
+<td width="30%">
 
 <img src="picture/coreset_tradeoff.jpg" width="100%">
 
@@ -241,7 +237,7 @@ Policy_loss = -advantage × log_prob + KL_penalty
 
 **LLM Analyzer Interface (Streamlit)**
 
-<img src="./picture/llm_streamlit.jpg" alt="Streamlit Screenshot" width="100%">
+<img src="./picture/llm_streamlit.jpg" alt="Streamlit Screenshot" width="200%">
 
 <br>
 
