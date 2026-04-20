@@ -189,11 +189,11 @@ Coreset Sampling 최적 운영점 검증: 메모리-이상탐지 성능-검색 l
 
 | Index sharding | 100% Index Page Faults/sec | 10% Index Page Faults/sec |
 | :--- | :---: | :---: |
-| 미적용 | 45.2 (cache pollution) | 38.7 (cache pollution) |
-| 적용 | 52.3 (isolated) | 8.1 (isolated) |
+| X | 45.2 | 38.7 |
+| O | 52.3 | 8.1 |
 
 </td>
-<td width="30%">
+<td width="100%">
 
 <img src="picture/coreset_tradeoff.jpg" width="100%">
 
