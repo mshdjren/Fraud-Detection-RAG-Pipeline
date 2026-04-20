@@ -14,6 +14,15 @@
 Tabular 데이터에서 이상 거래를 탐지하고 원인을 설명하는 엔드투엔드 시스템입니다. 
 Elasticsearch 기반 Two-Stage Retrieval과 경량 LLM Analyzer를 결합하여, 검색 및 이상탐지 성능 목표를 개선하고자 하였습니다.
 
+## 🎯 To be Updated..
+
+- [ ] 코드 정리
+- [ ] 전체 파이프라인 설명 picture update 예정
+- [ ] Locust 부하테스트 report 이미지 update 예정
+- [ ] Data mining 관련 통계 update 예정
+- [ ] LLM analyzer streamlit GRPO 적용 전 (SFT only) 예시라, 적용 유무 비교 이미지 update 예정
+- [ ] ## 🚀 실행 가이드 (Quick Start) update 예정 
+
 ### 🎯 핵심 문제 해결
 
 | 문제 | 해결 방안 | 성과 |
@@ -28,7 +37,7 @@ Elasticsearch 기반 Two-Stage Retrieval과 경량 LLM Analyzer를 결합하여,
 
 ## 🏗️ 시스템 아키텍처 (Architecture)
 
-![Fraud Detection System Architecture Diagram](./picture/pipeline.jpg)
+![Fraud Detection System Architecture Diagram](./picture/pipeline.jpg) -->
 
 ### 파이프라인 흐름
 
@@ -87,7 +96,7 @@ Version1의 매칭 클러스터에서, 최근접 정상 클러스터 4개를 최
 candidates = [top_1_rule_match] + sorted(centroids, key=lambda x: l2(vec, x))[:4]
 ```
 
-- **의도**: Recall@5 및 Top-5 매칭 다양성 ↑ (0.816 → 0.905)
+- **의도**: Recall@5 및 Top-5 매칭 다양성 ↑
 - **한계**: Strict AND에 비해 검색 지연 ↑
 
 ---
@@ -130,45 +139,74 @@ V1 및 V2의 Range 연산을 **Term Matching**으로 전환하여 Pruning 성능
 
 #### 📊 실험 결과 (Percoalte query routing)
 
-Percolate query version에 따른 클러스터 정확도, 리콜, 지연 시간 및 AUROC 지표를 비교합니다.
+Percolate query version에 따른 클러스터 정확도, 리콜, 단건 검색 지연 시간 및 AUROC 지표를 비교합니다.
 
-| Percolate query version | Cluster acc / Recall @5 | Router MRR | Latency p99 (ms) | AUROC (Total) |
+| Percolate query version | Cluster acc / Router Recall @5 | Router MRR | Latency p99 (ms) | knn Recall @5 AUROC |
 | :--- | :---: | :---: | :---: | :---: |
-| **Strict AND (v1)** | 0.816 / 0.816 | 1.00 | 1637.78 | 0.786 / 0.8726 |
-| **V1 + aug** | 0.816 / 0.905 | 0.941 | 1720.04 | 0.956 / 0.9125 |
-| **V1 + aug + bucket** | 0.409 / 0.818 | 0.4998 | 1993.10 | 0.956 / 0.9037 |
+| **Strict AND (v1)** | 0.816 / 0.816 | 0.941 | 420.25 | 0.786 / 0.8726 |
+| **V1 + aug** | 0.823 / 0.905 | 1.00 | 430.01 | 0.956 / 0.9125 |
+| **V1 + aug + bucket** | 0.823 / 1.00 | 0.4998 | 409.25 | 0.956 / 0.9037 |
 
 ---
 
 ### 2️⃣ Filtered KNN (Coreset Sampling 검증)
 Coreset Sampling 최적 운영점 검증: 메모리-이상탐지 성능-검색 latency trade-off 분석을 통해, coreset sampling 비율 10%의 최적점을 도출하고자 하였습니다.
 
-#### 📊 실험 결과 (Coreset Sampling 검증)
 <table>
 <tr>
-<td width="60%" valign="top">
+<td width="50%" align="center">
 
-#### **Classification Report**
-| Metric | Normal | Abnormal | Macro Avg | Weighted Avg |
-| :--- | :---: | :---: | :---: | :---: |
-| **Precision** | 0.86 | 0.81 | 0.83 | 0.83 |
-| **Recall** | 0.80 | 0.87 | 0.83 | 0.83 |
-| **F1-Score** | 0.83 | 0.84 | 0.83 | 0.83 |
-| **Support** | 1,415 | 1,415 | 2,830 | 2,830 |
+<img src="picture/coreset_explain.jpg" width="100%">
+
+**Coreset Sampling Algorithm (from https://kmhana.tistory.com/6)**
 
 </td>
-<td width="40%">
+<td width="50%" align="center">
 
-<img src="picture/page_fault.jpg" width="100%">
+<img src="picture/coreset_tsne.jpg" width="100%">
+
+**Cluster Distribution with coreset sampling ratio(t-SNE)**
+
+</td>
+</tr>
+</table>
+
+<img src="picture/coreset_tradeoff.jpg" width="100%">
+<img src="picture/coreset_tradeoff.jpg" width="100%">
+
+
+#### 📊 실험 결과 (Coreset Sampling 검증)
+
+**AUROC vs. Sampling 비율:**
+
+| Coreset % | Index Size (GB) | Docs Count | AUROC | Recall@5 | Median Latency (ms) |
+| :---: | :---: | :---: | :---: | :---: | :---: |
+| 100 | 2.8 | 100,000 | 0.912 | 0.89 | 125 |
+| 10 | 0.31 | 10,000 | 0.908 | 0.87 | 68 |
+| 1 | 0.035 | 1,000 | 0.885 | 0.78 | 52 |
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+**Node Pinning 효과:**
+
+| Node Pinning | 100% Index Page Faults/sec | 10% Index Page Faults/sec |
+| :--- | :---: | :---: |
+| 미적용 | 45.2 (cache pollution) | 38.7 (cache pollution) |
+| 적용 | 52.3 (isolated) | 8.1 (isolated) |
+
+</td>
+<td width="50%">
+
+<img src="picture/coreset_tradeoff.jpg" width="100%">
 
 </td>
 </tr>
 </table>
 
 <br>
-* **Overall Accuracy**: 83.32%
-* **Total Correct**: 2,358 / 2,830
-* **Analysis**: Abnormal(Fraud)에 대한 Recall(0.87)이 상대적으로 높아, 실제 이상 상황을 놓치지 않는 성능이 준수하게 확보됨을 확인하였습니다.
+
 ---
 
 ### 3️⃣ Pipeline-aware data mining & LLM Analyzer 경량화 및 GRPO 최적화
@@ -201,64 +239,21 @@ Policy_loss = -advantage × log_prob + KL_penalty
 
 #### 📊 실험 결과 (Data mining 및 LLM Analyzer 최적화)
 
-<table>
-  <tr>
-    <td width="50%" rowspan="2" valign="top">
-      <p align="center"><b>LLM Analyzer Interface (Streamlit)</b></p>
-      <img src="./picture/llm_streamlit.jpg" alt="Streamlit Screenshot" width="100%">
-    </td>
-    <td width="50%" valign="top">
-      <p align="center"><b>Negative Mining Sampling Efficiency</b></p>
-      <img src="./picture/mining_data.jpg" alt="Mining Data Graph" width="100%">
-    </td>
-  </tr>
-  <tr>
-    <td valign="top">
-      <p align="center"><b>Performance Metrics Comparison</b></p>
-      <table width="100%">
-        <thead>
-          <tr>
-            <th>Data Type</th>
-            <th>Training</th>
-            <th>AUROC</th>
-            <th>ECE</th>
-            <th>Judge</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><b>Distance-based</b></td>
-            <td>SFT</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-          </tr>
-          <tr>
-            <td><b>Mining-based</b></td>
-            <td>SFT</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-          </tr>
-          <tr>
-            <td><b>Distance-based</b></td>
-            <td>GRPO</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-          </tr>
-          <tr>
-            <td><b>Mining-based</b></td>
-            <td>GRPO</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-          </tr>
-        </tbody>
-      </table>
-    </td>
-  </tr>
-</table>
+**LLM Analyzer Interface (Streamlit)**
+
+<img src="./picture/llm_streamlit.jpg" alt="Streamlit Screenshot" width="100%">
+
+<br>
+
+**Data mining 및 GRPO 적용 유무에 따른 LLM Analyzer 이상 판단 성능**
+
+| Data Type | Training | AUROC | ECE | Judge |
+|:---|:---:|:---:|:---:|:---:|
+| **Distance-based** | SFT | - | - | - |
+| **Mining-based** | SFT | - | - | - |
+| **Distance-based** | GRPO | - | - | - |
+| **Mining-based** | GRPO | - | - | - |
+
 
 ## 💻 기술 스택 (Technology Stack)
 
@@ -287,7 +282,7 @@ Policy_loss = -advantage × log_prob + KL_penalty
 - **Storage**: Google Cloud Storage (GCS)
 - **Registry**: Artifact Registry, Container Registry
 
-<!-- --- 
+--- 
 
 ## 🚀 실행 가이드 (Quick Start)
 
@@ -316,13 +311,13 @@ python scripts/create_index.py --experiment-case pca_64_k100
 ### 2️⃣ Microservices 배포
 ```bash
 # ConfigMap 적용 (환경 변수)
-kubectl apply -f k8s/configmap.yaml
+kubectl apply -f k8s/00-anomaly-config.yaml
 
 # 각 서비스 배포
-kubectl apply -f k8s/router-deployment.yaml
-kubectl apply -f k8s/retriever-deployment.yaml
-kubectl apply -f k8s/analyzer-deployment.yaml
-kubectl apply -f k8s/orchestrator-deployment.yaml
+kubectl apply -f k8s/02-router.yaml
+kubectl apply -f k8s/03-retriever.yaml
+kubectl apply -f k8s/04-local-analyzer.yaml
+kubectl apply -f k8s/05-orchestrator.yaml
 ```
 
 ### 3️⃣ 추론 실행
@@ -398,9 +393,3 @@ fraudecom_v3/
 **기술 문서**
 - [Elasticsearch Percolate Query](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-percolate-query.html)
 - [GKE RAG pipeline](https://docs.cloud.google.com/kubernetes-engine/docs/tutorials/build-rag-chatbot?hl=ko)
-
----
-
-## 🎯 Next Steps
-
-- [ ] 코드 정리
