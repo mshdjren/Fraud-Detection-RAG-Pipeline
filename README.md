@@ -37,7 +37,8 @@ Elasticsearch 기반 Two-Stage Retrieval과 경량 LLM Analyzer를 결합하여,
 
 ## 🏗️ 시스템 아키텍처 (Architecture)
 
-<!-- ![Fraud Detection System Architecture Diagram](./picture/pipeline.jpg) --> -->
+파이프라인 overview picture 업로드 예정..
+<!-- ![Fraud Detection System Architecture Diagram](./picture/pipeline.jpg) -->
 
 ### 파이프라인 흐름
 
@@ -185,17 +186,19 @@ Coreset Sampling 최적 운영점 검증: 메모리-이상탐지 성능-검색 l
 <tr>
 <td width="50%" valign="top">
 
-**Coreset Sampling 유무에 따른 Page Faults 발생 정도 (Memory 2GB로 Node 제한시)**
+**Coreset Sampling 유무에 따른 Page Faults 발생 정도**<br>
+*(Memory 2GB로 Node 제한 시)*
 
-| Index sharding | 100% Index Page Faults/sec | 10% Index Page Faults/sec |
-| :--- | :---: | :---: |
-| X | 45.2 | 38.7 |
-| O | 52.3 | 8.1 |
+| Index sharding | 100% Index<br>(Page Faults/sec) | 10% Index<br>(Page Faults/sec) |
+| :---: | :---: | :---: |
+| **X** | 45.2 | 38.7 |
+| **O** | 52.3 | **8.1** |
 
 </td>
-<td width="100%">
+<td width="50%" valign="top" align="center">
 
 <img src="picture/coreset_tradeoff.jpg" width="100%">
+<p align="center"><i>AUROC and Inference Speed vs. Coreset Sampling Ratio</i></p>
 
 </td>
 </tr>
