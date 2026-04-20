@@ -37,7 +37,7 @@ Elasticsearch 기반 Two-Stage Retrieval과 경량 LLM Analyzer를 결합하여,
 
 ## 🏗️ 시스템 아키텍처 (Architecture)
 
-파이프라인 overview picture 업로드 예정..
+[파이프라인 overview picture 업로드 예정]
 <!-- ![Fraud Detection System Architecture Diagram](./picture/pipeline.jpg) -->
 
 ### 파이프라인 흐름
@@ -172,6 +172,8 @@ Coreset Sampling 최적 운영점 검증: 메모리-이상탐지 성능-검색 l
 </tr>
 </table>
 
+---
+
 #### 📊 실험 결과 (Coreset Sampling 검증)
 
 **Croreset Sampling 비율 vs AUROC vs 검색 지연**
@@ -235,6 +237,7 @@ Reward = 0.40 × Accuracy          # Binary 판정
 Advantage = (reward - group_mean) / group_std  # 같은 hard negative type 내
 Policy_loss = -advantage × log_prob + KL_penalty
 ```
+---
 
 #### 📊 실험 결과 (Data mining 및 LLM Analyzer 최적화)
 
@@ -256,6 +259,7 @@ Policy_loss = -advantage × log_prob + KL_penalty
 - **ECE (Expected Calibration Error)**: Confidence calibration 지표, 낮을수록 우수 (Teacher prompt 개선 + GRPO calibration reward)
 - **Judge**: HuggingFace-based reasoning quality 평가 (Relevance, Consistency, Specificity), 10점 만점
 
+---
 
 ## 💻 기술 스택 (Technology Stack)
 
@@ -359,7 +363,7 @@ cp .env.example .env
 # 4. 로컬 테스트
 pytest tests/
 ```
---- -->
+---
 
 ## 📁 프로젝트 구조 (Directory Structure)
 
