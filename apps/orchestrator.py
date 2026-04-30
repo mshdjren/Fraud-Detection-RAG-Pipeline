@@ -58,6 +58,7 @@ from pybreaker import CircuitBreaker, CircuitBreakerError
 ROUTER_URL    = os.getenv("ROUTER_URL",    "http://anomaly-router:80")
 RETRIEVER_URL = os.getenv("RETRIEVER_URL", "http://anomaly-retriever:80")
 ANALYZER_URL  = os.getenv("ANALYZER_URL",  "http://anomaly-analyzer:80")
+MCP_WRAPPER_ENABLED = os.getenv("MCP_WRAPPER_ENABLED", "false").lower() == "true"
 
 EXPERIMENT_CASE           = os.getenv("EXPERIMENT_CASE",           "pca_64")
 DEFAULT_PERCOLATE_VERSION = os.getenv("DEFAULT_PERCOLATE_VERSION",  "v2")
@@ -338,18 +339,31 @@ async def call_router(
     """
     start = time.time()
     try:
-        resp = await call_with_retry(
-            client, "POST", f"{ROUTER_URL}/route",
-            timeout=ROUTER_TIMEOUT,
-            service_name="router",
-            json={"embedding": embedding},
-            headers={
-                "Content-Type":     "application/json",
-                "X-Router-Case":    experiment_case,
-                "X-Router-Version": percolate_version,
-            }
-        )
-        result = resp.json()
+        if MCP_WRAPPER_ENABLED:
+            resp = await call_with_retry(
+                client, "POST", f"{ROUTER_URL}/mcp/execute",
+                timeout=ROUTER_TIMEOUT,
+                service_name="router",
+                json={
+                    "tool": "router.route",
+                    "arguments": {"embedding": embedding},
+                },
+                headers={"Content-Type": "application/json"},
+            )
+            result = resp.json().get("result", {})
+        else:
+            resp = await call_with_retry(
+                client, "POST", f"{ROUTER_URL}/route",
+                timeout=ROUTER_TIMEOUT,
+                service_name="router",
+                json={"embedding": embedding},
+                headers={
+                    "Content-Type":     "application/json",
+                    "X-Router-Case":    experiment_case,
+                    "X-Router-Version": percolate_version,
+                }
+            )
+            result = resp.json()
         service_latency.labels(service="router").observe(time.time() - start)
         logger.info(
             "router_success",
@@ -385,19 +399,30 @@ async def call_retriever(
     """
     start = time.time()
     try:
-        resp = await call_with_retry(
-            client, "POST", f"{RETRIEVER_URL}/retrieve",
-            timeout=RETRIEVER_TIMEOUT,
-            service_name="retriever",
-            json={
-                "embedding":   embedding,
-                "cluster_ids": cluster_ids,
-                "vec_index":   vec_index,
-                "top_k":       top_k,
-            },
-            headers={"Content-Type": "application/json"},
-        )
-        result = resp.json()
+        payload = {
+            "embedding":   embedding,
+            "cluster_ids": cluster_ids,
+            "vec_index":   vec_index,
+            "top_k":       top_k,
+        }
+        if MCP_WRAPPER_ENABLED:
+            resp = await call_with_retry(
+                client, "POST", f"{RETRIEVER_URL}/mcp/execute",
+                timeout=RETRIEVER_TIMEOUT,
+                service_name="retriever",
+                json={"tool": "retriever.retrieve", "arguments": payload},
+                headers={"Content-Type": "application/json"},
+            )
+            result = resp.json().get("result", {})
+        else:
+            resp = await call_with_retry(
+                client, "POST", f"{RETRIEVER_URL}/retrieve",
+                timeout=RETRIEVER_TIMEOUT,
+                service_name="retriever",
+                json=payload,
+                headers={"Content-Type": "application/json"},
+            )
+            result = resp.json()
         service_latency.labels(service="retriever").observe(time.time() - start)
         multi_cluster_search.inc()
         logger.info(
