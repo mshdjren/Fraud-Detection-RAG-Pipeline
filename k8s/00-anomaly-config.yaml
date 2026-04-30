@@ -16,6 +16,7 @@ data:
   ROUTER_URL: "http://anomaly-router"
   RETRIEVER_URL: "http://anomaly-retriever"
   ANALYZER_URL: "http://anomaly-analyzer"
+  MCP_WRAPPER_ENABLED: "false"
 
   # ✅ GCP Configuration (for Analyzer)
   GOOGLE_CLOUD_PROJECT: "project-fcd52ffc-8b8b-4557-858"
